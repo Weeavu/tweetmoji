@@ -1,14 +1,14 @@
+'use client'
+
 import Tweet from '@/components/tweet/tweet'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
+import { Card, CardFooter, CardHeader } from '@/components/ui/card'
 import { Textarea } from '@/components/ui/textarea'
-import { Heart, MessageCircle, Repeat2, Share } from 'lucide-react'
 
-import OpenAI from 'openai'
+import { useState } from 'react'
 
-export default async function TwitterFeed() {
+export default function TwitterFeed() {
 	// const openai = new OpenAI({
 	// 	apiKey: process.env.OPENAI_KEY,
 	// })
@@ -25,7 +25,9 @@ export default async function TwitterFeed() {
 	// })
 
 	// console.log(completion.choices[0].message)
-	const tweets = [
+
+	const [newTweet, setNewTweet] = useState('')
+	const [tweets, setTweets] = useState([
 		{
 			id: 1,
 			user: {
@@ -33,7 +35,7 @@ export default async function TwitterFeed() {
 				handle: 'johndoe',
 				avatar: '/placeholder-user.jpg',
 			},
-			content: 'Just had an amazing day at the beach! 🏖️ #summervibes',
+			content: '😘🙏',
 			likes: 15,
 			retweets: 3,
 			replies: 2,
@@ -45,8 +47,7 @@ export default async function TwitterFeed() {
 				handle: 'janesmith',
 				avatar: '/placeholder-user.jpg',
 			},
-			content:
-				'Excited to announce my new project! Stay tuned for more details. 🚀 #newbeginnings',
+			content: '👀🎬✨🍿💖',
 			likes: 32,
 			retweets: 8,
 			replies: 5,
@@ -58,13 +59,31 @@ export default async function TwitterFeed() {
 				handle: 'techenthusiast',
 				avatar: '/placeholder-user.jpg',
 			},
-			content:
-				'The future of AI is here! Check out this amazing new breakthrough: https://example.com/ai-news #AI #TechNews',
+			content: '📺🍿💤❤️',
 			likes: 45,
 			retweets: 12,
 			replies: 7,
 		},
-	]
+	])
+
+	const addTweet = (text: string) => {
+		setNewTweet('')
+		setTweets([
+			...tweets,
+			{
+				id: 3,
+				user: {
+					name: 'Tech Enthusiast',
+					handle: 'techenthusiast',
+					avatar: '/placeholder-user.jpg',
+				},
+				content: text,
+				likes: 45,
+				retweets: 12,
+				replies: 7,
+			},
+		])
+	}
 
 	return (
 		<div className="max-w-2xl mx-auto">
@@ -78,10 +97,17 @@ export default async function TwitterFeed() {
 							<AvatarImage src="/placeholder-user.jpg" alt="Your avatar" />
 							<AvatarFallback>You</AvatarFallback>
 						</Avatar>
-						<Textarea className="flex-grow" placeholder="What's happening?" />
+						<Textarea
+							className="flex-grow"
+							placeholder="What's happening?"
+							onChange={(e) => {
+								setNewTweet(e.target.value)
+							}}
+							value={newTweet}
+						/>
 					</CardHeader>
 					<CardFooter className="justify-between p-4">
-						<Button>Tweet</Button>
+						<Button onClick={() => addTweet(newTweet)}>Tweet</Button>
 					</CardFooter>
 				</Card>
 				{tweets.map((tweet) => (
